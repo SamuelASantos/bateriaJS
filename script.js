@@ -6,10 +6,19 @@ document.body.addEventListener('keyup', (event)=>{ // event -> Recebe como parâ
     playSound(event.code.toLowerCase());    // event.code -> Identifica a tecla que foi precionada
                                             // toLowerCase -> Transforma todas as letras em minúsculos
 });
+
+document.querySelector('.composer button').addEventListener('click', ()=>{   // Adicionado ao evendo de 'click' no botão que está dentro da div com classe 'composer' a execução da função
+    let song = document.querySelector('#input').value;  // Captura o que foi digitado na tag input
+
+    if (song !== '') {
+        let songArray = song.split(''); // Transforma tudo o que foi digitado num array
+        playComposition(songArray); // Envia o array criado para uma outra função
+    }
+});
+
 function playSound(sound) {
     let audioElement = document.querySelector(`#s_${sound}`);   // Seleciona o arquivo de audio baseado na tecla que foi apertada  
     let keyElement = document.querySelector(`div[data-key="${sound}"]`); // Seleciona uma div com atributo 'data-key'
-    console.log(keyElement);
 
     if (audioElement) {
         audioElement.currentTime = 0;   // Executa a ação sem esperar que a ação anterior precisa concluir.
@@ -21,5 +30,15 @@ function playSound(sound) {
         setTimeout(()=>{    // Executa uma função depois de determinado tempo. 1º PARÂMETRO = função que será executada; 2º PARÂMETRO = tempo em milisegundos;
             keyElement.classList.remove('active');  // classList.remove() -> Remove uma classe
         }, 300);
+    }
+}
+function playComposition(songArray) {
+    let wait = 0;
+
+    for (let songItem of songArray) {   // Dar um loop em cada item do array
+        setTimeout(()=>{
+            playSound(`key${songItem}`);
+        }, wait);
+        wait += 250;
     }
 }
